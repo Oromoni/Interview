@@ -36,8 +36,8 @@ interface User {
   name: string;
   email: string;
   id: string;
+  profileURL?: string; // ✅ Add this
 }
-
 interface InterviewCardProps {
   interviewId?: string;
   userId?: string;
@@ -49,10 +49,11 @@ interface InterviewCardProps {
 
 interface AgentProps {
   userName: string;
-  userId?: string;
+  userId: string;
+  profileImage?: string;
+  type: "generate" | "feedback";
   interviewId?: string;
   feedbackId?: string;
-  type: "generate" | "interview";
   questions?: string[];
 }
 
