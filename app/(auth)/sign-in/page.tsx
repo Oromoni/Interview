@@ -19,7 +19,7 @@ const SignIn = () => {
     }
   }, [searchParams, router]);
 
-  return <AuthForm type="sign-in" defaultEmail={email} />;
+  return <AuthForm type="sign-in" />;
 };
 
 export default SignIn;
