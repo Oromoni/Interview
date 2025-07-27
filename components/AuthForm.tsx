@@ -6,10 +6,6 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
 } from "@/components/ui/form";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +21,7 @@ import { auth } from "@/firebase/client";
 
 type FormType = "sign-up" | "sign-in";
 
+// Validation schema
 const authFormSchema = (type: FormType) => {
   return z.object({
     name: type === "sign-up" ? z.string().min(3, "Name is too short") : z.string().optional(),
@@ -38,7 +35,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const isSignUp = type === "sign-up";
   const formSchema = authFormSchema(type);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  type AuthFormFields = z.infer<typeof formSchema>;
+
+  const form = useForm<AuthFormFields>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -47,7 +46,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: AuthFormFields) {
     try {
       if (isSignUp) {
         const { name, email, password } = values;
@@ -116,29 +115,32 @@ const AuthForm = ({ type }: { type: FormType }) => {
     <div className="card-border lg:min-w-[500px]">
       <div className="flex flex-col gap-6 card py-14 px-10">
         <div className="flex flex-row gap-2 justify-center">
-          <Image src={"/logo.svg"} alt="logo" height={32} width={38} />
+          <Image src="/logo.svg" alt="logo" height={32} width={38} />
           <h2 className="text-purple-100">PrepWise</h2>
         </div>
         <h3>Practice job interview with AI</h3>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full mt-4 form">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 w-full mt-4 form"
+          >
             {isSignUp && (
-              <FormField
+              <FormField<AuthFormFields>
                 control={form.control}
                 name="name"
                 label="Name"
                 placeholder="Your Full Name"
               />
             )}
-            <FormField
+            <FormField<AuthFormFields>
               control={form.control}
               name="email"
               label="Email"
               placeholder="Your Email"
               type="email"
             />
-            <FormField
+            <FormField<AuthFormFields>
               control={form.control}
               name="password"
               label="Password"
